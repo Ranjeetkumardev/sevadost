@@ -1,0 +1,43 @@
+# Python
+
+**pycache**/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual Environment
+
+venv/
+.venv/
+env/
+ENV/
+
+# Jupyter
+
+.ipynb_checkpoints/
+
+# Environment Variables
+
+.env
+.env.*
+!.env.example
+
+# Logs
+
+*.log
+logs/
+
+# Build
+
+dist/
+build/
+
+# IDE
+
+.vscode/
+.idea/
+
+# OS
+
+.DS_Store
+Thumbs.db
