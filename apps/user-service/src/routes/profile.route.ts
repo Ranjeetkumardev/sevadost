@@ -12,6 +12,13 @@ import {
 
 const router = Router();
 
+router.get("/health", (req, res) => {
+   console.log("Health check for user-service");
+  res.status(200).json({
+    service: "user-service",
+    status: "healthy",
+  });
+});
 router.post(
   "/",
   authMiddleware,

@@ -9,7 +9,7 @@ import { errorHandler, notFoundHandler } from "./middlewares/error.middleware";
 
 import { config, logger } from "./config/index";
 // import healthRoutes from "./routes/health.routes";
-import gatewayRoutes from "./routes/index"
+import gatewayRoutes from "./routes/index";
 
 const app = express();
 

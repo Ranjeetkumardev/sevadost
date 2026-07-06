@@ -1,43 +1,128 @@
-import validator from "validator";
+import { parsePhoneNumberFromString } from "libphonenumber-js";
 
-export const validatePhone = (phone: string) => {
-  const cleanedPhone = phone.replace(/\D/g, "");
+export interface ValidationResult {
+  success: boolean;
+  message?: string;
+}
 
-  if (!cleanedPhone) {
+export interface PhoneValidationResult extends ValidationResult {
+  identifier?: string;
+  countryCode?: string;
+  nationalNumber?: string;
+}
+
+export const normalizePhone = (
+  countryCode: string,
+  phoneNumber: string
+): PhoneValidationResult => {
+  try {
+    if (!countryCode?.trim()) {
+      return {
+        success: false,
+        message: "Country code is required.",
+      };
+    }
+
+    if (!phoneNumber?.trim()) {
+      return {
+        success: false,
+        message: "Phone number is required.",
+      };
+    }
+
+    const phone = parsePhoneNumberFromString(
+      `${countryCode}${phoneNumber}`
+    );
+
+    if (!phone || !phone.isValid()) {
+      return {
+        success: false,
+        message: "Invalid phone number.",
+      };
+    }
+
     return {
-      valid: false,
-      message: "Phone number is required",
+      success: true,
+      identifier: phone.number,
+      countryCode: `+${phone.countryCallingCode}`,
+      nationalNumber: phone.nationalNumber,
+    };
+  } catch {
+    return {
+      success: false,
+      message: "Invalid phone number.",
+    };
+  }
+};
+
+export const validateSendOtp = (
+  body: any
+): ValidationResult => {
+  if (!body) {
+    return {
+      success: false,
+      message: "Request body is required.",
     };
   }
 
-  if (!validator.isMobilePhone(cleanedPhone, "en-IN")) {
+  if (!body.countryCode) {
     return {
-      valid: false,
-      message: "Invalid phone number",
+      success: false,
+      message: "Country code is required.",
+    };
+  }
+
+  if (!body.phoneNumber) {
+    return {
+      success: false,
+      message: "Phone number is required.",
     };
   }
 
   return {
-    valid: true,
+    success: true,
   };
 };
 
-export const validateOtp = (otp: string) => {
-  if (!otp) {
+export const validateVerifyOtp = (
+  body: any
+): ValidationResult => {
+  if (!body) {
     return {
-      valid: false,
-      message: "OTP is required",
+      success: false,
+      message: "Request body is required.",
     };
   }
 
-  if (!/^\d{6}$/.test(otp)) {
+  if (!body.countryCode) {
     return {
-      valid: false,
-      message: "Invalid OTP",
+      success: false,
+      message: "Country code is required.",
+    };
+  }
+
+  if (!body.phoneNumber) {
+    return {
+      success: false,
+      message: "Phone number is required.",
+    };
+  }
+
+  if (!body.otp) {
+    return {
+      success: false,
+      message: "OTP is required.",
+    };
+  }
+
+  if (!/^\d{6}$/.test(body.otp)) {
+    return {
+      success: false,
+      message: "Invalid OTP.",
     };
   }
 
   return {
-    valid: true,
+    success: true,
   };
 };
