@@ -11,60 +11,25 @@ export const createServiceProxy = (
     pathRewrite: {
       [rewrite]: "",
     },
-    plugins: [
-      (proxyServer) => {
-        proxyServer.on("error", (_, req, res: any) => {
-          if (!res.headersSent) {
-            res.writeHead(503, {
-              "Content-Type": "application/json",
-            });
 
-            res.end(
-              JSON.stringify({
-                success: false,
-                message: `${serviceName} unavailable`,
-              }),
-            );
-          }
-        });
+    on: {
+      proxyReq: (proxyReq, req) => {
+        console.log(`[${serviceName}] Proxying ==${req.method} ${req.url} -> ${target}`);
       },
-    ],
+      error: (err, req, res: any) => {
+        console.error(`[${serviceName}] Proxy Error:`, err.message);
+        if (!res.headersSent) {
+          res.writeHead(503, { "Content-Type": "application/json" });
+          res.end(
+            JSON.stringify({
+              success: false,
+              message: `${serviceName} is unavailable`,
+            })
+          );
+        }
+      },
+    },
+
+    proxyTimeout: 15000,
+    timeout: 15000,
   });
-
-  
-
-// import { createProxyMiddleware } from "http-proxy-middleware";
-// export const createServiceProxy = (
-//   target: string,
-//   serviceName: string,
-//   pathRewrite?: Record<string, string>,
-// ) => {
-//   return createProxyMiddleware({
-//     target,
-//     changeOrigin: true,
-
-//     pathRewrite,
-
-//     plugins: [
-//       (proxyServer) => {
-//         proxyServer.on("error", (_, req, res: any) => {
-//           console.error(`${serviceName} unavailable`);
-
-//           if (!res.headersSent) {
-//             res.writeHead(503, {
-//               "Content-Type": "application/json",
-//             });
-
-//             res.end(
-//               JSON.stringify({
-//                 success: false,
-//                 message: `${serviceName} unavailable`,
-//               }),
-//             );
-//           }
-//         });
-//       },
-//     ],
-//   });
-// };
- 

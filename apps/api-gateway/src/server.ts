@@ -16,8 +16,9 @@ const app = express();
 app.use(helmet());
 app.use(cors());
 app.use(compression());
-app.use(express.json());
 
+// Do not parse JSON globally in the gateway; proxied requests must stream raw body
+// through to target services such as auth-service.
 app.use(correlationId);
 app.use(rateLimiter);
 

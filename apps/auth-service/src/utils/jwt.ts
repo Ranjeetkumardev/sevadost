@@ -1,11 +1,19 @@
 import jwt, { JwtPayload, SignOptions } from "jsonwebtoken";
+import { config } from "../config/index";
 
-const ACCESS_SECRET = process.env.JWT_ACCESS_SECRET!;
-const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET!;
+const ACCESS_SECRET = config.jwt.accessSecret;
+const REFRESH_SECRET = config.jwt.refreshSecret;
 
-const ACCESS_EXPIRES_IN = process.env.JWT_ACCESS_EXPIRES_IN || "15m";
-const REFRESH_EXPIRES_IN = process.env.JWT_REFRESH_EXPIRES_IN || "30d";
+if (!ACCESS_SECRET) {
+  throw new Error("ACCESS_SECRET environment variable is not set");
+}
 
+if (!REFRESH_SECRET) {
+  throw new Error("REFRESH_SECRET environment variable is not set");
+}
+
+const ACCESS_EXPIRES_IN = config.jwt.accessExpiry;
+const REFRESH_EXPIRES_IN = config.jwt.refreshExpiry;
 export interface AccessTokenPayload {
   userId: string;
   sessionId: string;
@@ -17,25 +25,19 @@ export interface RefreshTokenPayload {
   sessionId: string;
 }
 
-export const generateAccessToken = (
-  payload: AccessTokenPayload
-): string => {
+export const generateAccessToken = (payload: AccessTokenPayload): string => {
   return jwt.sign(payload, ACCESS_SECRET, {
     expiresIn: ACCESS_EXPIRES_IN,
   } as SignOptions);
 };
 
-export const generateRefreshToken = (
-  payload: RefreshTokenPayload
-): string => {
+export const generateRefreshToken = (payload: RefreshTokenPayload): string => {
   return jwt.sign(payload, REFRESH_SECRET, {
     expiresIn: REFRESH_EXPIRES_IN,
   } as SignOptions);
 };
 
-export const verifyAccessToken = (
-  token: string
-): AccessTokenPayload | null => {
+export const verifyAccessToken = (token: string): AccessTokenPayload | null => {
   try {
     return jwt.verify(token, ACCESS_SECRET) as AccessTokenPayload;
   } catch {
@@ -44,7 +46,7 @@ export const verifyAccessToken = (
 };
 
 export const verifyRefreshToken = (
-  token: string
+  token: string,
 ): RefreshTokenPayload | null => {
   try {
     return jwt.verify(token, REFRESH_SECRET) as RefreshTokenPayload;
@@ -53,8 +55,6 @@ export const verifyRefreshToken = (
   }
 };
 
-export const decodeToken = (
-  token: string
-): JwtPayload | string | null => {
+export const decodeToken = (token: string): JwtPayload | string | null => {
   return jwt.decode(token);
 };

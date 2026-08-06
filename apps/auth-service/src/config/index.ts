@@ -10,11 +10,11 @@ export const config = {
   mongoUri: process.env.MONGODB_URI!,
 
   jwt: {
-    accessSecret: process.env.JWT_ACCESS_SECRET!,
-    refreshSecret: process.env.JWT_REFRESH_SECRET!,
+    accessSecret: process.env.ACCESS_SECRET!,
+    refreshSecret: process.env.REFRESH_SECRET!,
 
-    accessExpiry: process.env.ACCESS_TOKEN_EXPIRY || "15m",
+    accessExpiry: process.env.ACCESS_EXPIRES_IN || "15m",
 
-    refreshExpiry: process.env.REFRESH_TOKEN_EXPIRY || "7d",
+    refreshExpiry: process.env.REFRESH_EXPIRES_IN || "30d",
   },
 };

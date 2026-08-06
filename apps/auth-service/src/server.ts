@@ -3,7 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import compression from "compression";
 import mongoose from "mongoose";
-import routes from "./routes";
+import routes from "./routes/auth.routes";
 
 import { config } from "./config";
 import { connectDB } from "./config/database";
@@ -22,7 +22,7 @@ const start = async () => {
 
   app.use(express.json());
 
-  app.use("/api/v1/auth", routes);
+  app.use("/", routes);
 
   app.listen(config.port, () => {
     console.log(`Auth Service running on ${config.port}`);
