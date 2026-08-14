@@ -1,90 +1,150 @@
-import mongoose, { Document } from "mongoose";
+import { Document, Schema, model } from "mongoose";
 
 export interface IAddress extends Document {
   authUserId: string;
-
-  label: string;
-
-  addressLine1: string;
-
-  addressLine2?: string;
-
+  label: "home" | "work" | "other";
+  recipientName: string;
+  phoneNumber?: string;
+  line1: string;
+  line2?: string;
+  landmark?: string;
   city: string;
-
   state: string;
-
-  pincode: string;
-
-  location: {
-    type: string;
-    coordinates: number[];
-  };
-
+  postalCode: string;
+  countryCode: string;
+  location?: { type: "Point"; coordinates: [number, number] };
   isDefault: boolean;
+  deletedAt?: Date | null;
 }
 
-const addressSchema = new mongoose.Schema<IAddress>(
+const addressSchema = new Schema<IAddress>(
   {
-    authUserId: {
+    authUserId: { type: String, required: true, index: true, immutable: true },
+    label: { type: String, enum: ["home", "work", "other"], default: "home" },
+    recipientName: { type: String, required: true, trim: true, maxlength: 100 },
+    phoneNumber: { type: String, trim: true, maxlength: 20 },
+    line1: { type: String, required: true, trim: true, maxlength: 200 },
+    line2: { type: String, trim: true, maxlength: 200 },
+    landmark: { type: String, trim: true, maxlength: 150 },
+    city: { type: String, required: true, trim: true, maxlength: 100 },
+    state: { type: String, required: true, trim: true, maxlength: 100 },
+    postalCode: { type: String, required: true, trim: true, maxlength: 20 },
+    countryCode: {
       type: String,
       required: true,
-      index: true,
+      uppercase: true,
+      trim: true,
+      minlength: 2,
+      maxlength: 2,
     },
-
-    label: {
-      type: String,
-      required: true,
-    },
-
-    addressLine1: {
-      type: String,
-      required: true,
-    },
-
-    addressLine2: {
-      type: String,
-    },
-
-    city: {
-      type: String,
-      required: true,
-    },
-
-    state: {
-      type: String,
-      required: true,
-    },
-
-    pincode: {
-      type: String,
-      required: true,
-    },
-
     location: {
-      type: {
-        type: String,
-        enum: ["Point"],
-        default: "Point",
-      },
-
+      type: { type: String, enum: ["Point"] },
       coordinates: {
         type: [Number],
-        required: true,
+        validate: [
+          (v: number[]) => !v?.length || v.length === 2,
+          "Coordinates must be [longitude, latitude]",
+        ],
       },
     },
-
-    isDefault: {
-      type: Boolean,
-      default: false,
-    },
+    isDefault: { type: Boolean, default: false },
+    deletedAt: { type: Date, default: null },
   },
-  {
-    timestamps: true,
-  },
+  { timestamps: true, versionKey: false, strict: true },
 );
 
-addressSchema.index({
-  location: "2dsphere",
-});
+addressSchema.index({ authUserId: 1, isDefault: 1 });
+addressSchema.index({ location: "2dsphere" }, { sparse: true });
 
-export const Address = mongoose.model<IAddress>("Address", addressSchema);
+export const Address = model<IAddress>("Address", addressSchema);
+
+// import mongoose, { Document } from "mongoose";
+
+// export interface IAddress extends Document {
+//   authUserId: string;
+
+//   label: string;
+
+//   addressLine1: string;
+
+//   addressLine2?: string;
+
+//   city: string;
+
+//   state: string;
+
+//   pincode: string;
+
+//   location: {
+//     type: string;
+//     coordinates: number[];
+//   };
+
+//   isDefault: boolean;
+// }
+
+// const addressSchema = new mongoose.Schema<IAddress>(
+//   {
+//     authUserId: {
+//       type: String,
+//       required: true,
+//       index: true,
+//     },
+
+//     label: {
+//       type: String,
+//       required: true,
+//     },
+
+//     addressLine1: {
+//       type: String,
+//       required: true,
+//     },
+
+//     addressLine2: {
+//       type: String,
+//     },
+
+//     city: {
+//       type: String,
+//       required: true,
+//     },
+
+//     state: {
+//       type: String,
+//       required: true,
+//     },
+
+//     pincode: {
+//       type: String,
+//       required: true,
+//     },
+
+//     location: {
+//       type: {
+//         type: String,
+//         enum: ["Point"],
+//         default: "Point",
+//       },
+
+//       coordinates: {
+//         type: [Number],
+//         required: true,
+//       },
+//     },
+
+//     isDefault: {
+//       type: Boolean,
+//       default: false,
+//     },
+//   },
+//   {
+//     timestamps: true,
+//   },
+// );
+
+// addressSchema.index({
+//   location: "2dsphere",
+// });
+
+// export const Address = mongoose.model<IAddress>("Address", addressSchema);

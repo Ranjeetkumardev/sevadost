@@ -1,14 +1,12 @@
-import "express";
+export {};
 
 declare global {
   namespace Express {
     interface Request {
-      user?: {
-        id: string;
-        role: string;
-      };
+      userId?: string;
+      sessionId?: string;
+      roles?: string[];
+      correlationId?: string;
     }
   }
 }
-
-export {};
