@@ -11,8 +11,9 @@ export const createServiceProxy = (
     pathRewrite: {
       [rewrite]: "",
     },
-
+    // lifecycle 
     on: {
+    // proxyReq: Logs outgoing requests as they are intercepted and forwarded,
       proxyReq: (proxyReq, req) => {
         console.log(`[${serviceName}] Proxying ==${req.method} ${req.url} -> ${target}`);
       },

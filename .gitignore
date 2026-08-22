@@ -2,3 +2,21 @@ clients/mobile/.git
 clients/web/.git
 *.tar
 *.tar
+*.tar.xz
+# Compressed Archives
+*.tar
+*.tar.gz
+*.tgz
+*.tar.xz
+*.txz
+*.tar.bz2
+*.tbz2
+*.zip
+*.rar
+*.7z
+# Archives
+*.tar
+*.tar.gz
+*.tar.xz
+*.zip
+*.7z

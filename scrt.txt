@@ -1,0 +1,77 @@
+user 
+NODE_ENV=development
+
+PORT=4002
+
+MONGODB_URI=mongodb://localhost:27017/sevadost-user
+
+JWT_SECRET=your_jwt_secret
+
+AUTH_SERVICE_URL=http://localhost:4001
+==
+api getways 
+NODE_ENV=development
+
+PORT=4000
+NODE_ENV=development
+
+PORT=4000
+
+AUTH_SERVICE_URL=http://localhost:4001
+USER_SERVICE_URL=http://localhost:4002
+PROVIDER_SERVICE_URL=http://localhost:4003
+CATALOG_SERVICE_URL=http://localhost:4004
+BOOKING_SERVICE_URL=http://localhost:4005
+PAYMENT_SERVICE_URL=http://localhost:4006
+REVIEW_SERVICE_URL=http://localhost:4007
+MEDIA_SERVICE_URL=http://localhost:4008
+NOTIFICATION_SERVICE_URL=http://localhost:4009
+CHAT_SERVICE_URL=http://localhost:4010
+REALTIME_SERVICE_URL=http://localhost:4011
+SEARCH_SERVICE_URL=http://localhost:4012
+RECOMMENDATION_SERVICE_URL=http://localhost:4013
+FRAUD_SERVICE_URL=http://localhost:4014
+ANALYTICS_SERVICE_URL=http://localhost:4015
+AUDIT_SERVICE_URL=http://localhost:4016
+AI_SERVICE_URL=http://localhost:4017
+ADMIN_SERVICE_URL=http://localhost:4018
+
+# AUTH_SERVICE_URL=http://localhost:4001
+
+# USER_SERVICE_URL=http://localhost:4002
+
+# PROVIDER_SERVICE_URL=http://localhost:4003
+
+# BOOKING_SERVICE_URL=http://localhost:4004
+
+# PAYMENT_SERVICE_URL=http://localhost:4005
+
+====
+auth 
+NODE_ENV=development
+
+PORT=4001
+
+MONGODB_URI=mongodb://localhost:27017/sevadost-auth
+
+# JWT_ACCESS_SECRET=your_access_secret
+
+# JWT_REFRESH_SECRET=your_refresh_secret
+
+# ACCESS_TOKEN_EXPIRY=15m
+
+# REFRESH_TOKEN_EXPIRY=7d
+
+ACCESS_SECRET=supersecretaccesskey1234567890changeinproduction!
+REFRESH_SECRET=supersecretrefreshkey1234567890changeinproduction!
+ACCESS_EXPIRES_IN=15m
+REFRESH_EXPIRES_IN=30d
+# JWT_ACCESS_SECRET=your-super-secret-access-key
+
+# JWT_REFRESH_SECRET=your-super-secret-refresh-key
+
+# JWT_ACCESS_EXPIRES_IN=15m
+
+# JWT_REFRESH_EXPIRES_IN=30d
+
+=========
