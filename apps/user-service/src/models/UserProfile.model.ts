@@ -48,7 +48,7 @@ const profileSchema = new Schema<IUserProfile>(
     },
     profileCompleted: { type: Boolean, default: false },
     completionPercentage: { type: Number, default: 0, min: 0, max: 100 },
-    deletedAt: { type: Date, default: null },
+    deletedAt: { type: Date, default: null },   
   },
   { timestamps: true, versionKey: false, strict: true },
 );

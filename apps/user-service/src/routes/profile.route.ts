@@ -8,82 +8,115 @@ import {
   updateAddressSchema,
   updateProfileSchema,
 } from "../validators/profile.validator";
-import * as controller from "../controllers/profile.controller";
+import {
+  getProfile,
+  updateProfile,
+  getCompletion,
+  updatePreferences,
+  setAvatar,
+  removeAvatar,
+  getAddresses,
+  createAddress,
+  updateAddress,
+  setDefaultAddress,
+  removeAddress,
+  requestAccountDeletion,
+} from "../controllers/profile.controller";
 
 const router = Router();
 
 router.get("/health", (_req, res) =>
   res.json({ service: "user-service", status: "healthy" }),
 );
-router.use(authenticate);
-router.get("/profile", controller.getProfile);
+
+router.get("/profile", authenticate, getProfile);
 router.patch(
-  "/profile",
+  "/profile/update",
+  authenticate,
   validateBody(updateProfileSchema),
-  controller.patchProfile,
+  updateProfile,
 );
-router.get("/profile/completion", controller.getCompletion);
+router.get("/profile/completion", authenticate, getCompletion);
 router.patch(
   "/profile/preferences",
+  authenticate,
   validateBody(preferencesSchema),
-  controller.patchPreferences,
+  updatePreferences,
 );
-router.put("/profile/avatar", validateBody(avatarSchema), controller.putAvatar);
-router.delete("/profile/avatar", controller.removeAvatar);
-router.get("/addresses", controller.getAddresses);
+
+router.put(
+  "/profile/avatar",
+  authenticate,
+  validateBody(avatarSchema),
+  setAvatar,
+);
+router.delete("/profile/avatar", authenticate, removeAvatar);
+
+router.get("/addresses", authenticate, getAddresses);
 router.post(
   "/addresses",
+  authenticate,
   validateBody(createAddressSchema),
-  controller.postAddress,
+  createAddress,
 );
 router.patch(
   "/addresses/:addressId",
+  authenticate,
   validateBody(updateAddressSchema),
-  controller.patchAddress,
+  updateAddress,
 );
-router.patch("/addresses/:addressId/default", controller.setDefaultAddress);
-router.delete("/addresses/:addressId", controller.removeAddress);
-router.post("/account/deletion-request", controller.requestAccountDeletion);
+router.patch("/addresses/:addressId/default", authenticate, setDefaultAddress);
+router.delete("/addresses/:addressId", authenticate, removeAddress);
+
+router.post("/account/deletion-request", authenticate, requestAccountDeletion);
 
 export default router;
 
 // import { Router } from "express";
-
+// import { authenticate } from "../middlewares/auth.middleware";
+// import { validateBody } from "../validators/validate.middleware";
 // import {
-//   getProfile,
-//   createProfile,
-//   updateProfile,
-// } from "../controllers/profile.controller";
-
-// import {
-//   authMiddleware,
-// } from "../middlewares/auth.middleware";
+//   avatarSchema,
+//   createAddressSchema,
+//   preferencesSchema,
+//   updateAddressSchema,
+//   updateProfileSchema,
+// } from "../validators/profile.validator";
+// import * as controller from "../controllers/profile.controller";
 
 // const router = Router();
 
-// router.get("/health", (req, res) => {
-//    console.log("Health check for user-service");
-//   res.status(200).json({
-//     service: "user-service",
-//     status: "healthy",
-//   });
-// });
-// router.post(
-//   "/",
-//   authMiddleware,
-//   createProfile
+// router.get("/health", (_req, res) =>
+//   res.json({ service: "user-service", status: "healthy" }),
 // );
 
-// router.get(
-//   "/me",
-//   authMiddleware,
-//   getProfile
-// );
-
+// router.get("/get-profile", controller.getProfile);
 // router.patch(
-//   "/me",
-//   authMiddleware,
-//   updateProfile
+//   "/update-profile",
+//   validateBody(updateProfileSchema),
+//   controller.patchProfile,
 // );
+// router.get("/compelete-profile/completion", controller.getCompletion);
+// router.patch(
+//   "/profile/preferences",
+//   validateBody(preferencesSchema),
+//   controller.patchPreferences,
+// );
+// router.put("/profile/avatar", validateBody(avatarSchema), controller.putAvatar);
+// router.delete("/profile/avatar", controller.removeAvatar);
+// router.get("/addresses", controller.getAddresses);
+// router.post(
+//   "/addresses",
+//   validateBody(createAddressSchema),
+//   controller.postAddress,
+// );
+// router.patch(
+//   "/addresses/:addressId",
+//   validateBody(updateAddressSchema),
+//   controller.patchAddress,
+// );
+// router.patch("/addresses/:addressId/default", controller.setDefaultAddress);
+// router.delete("/addresses/:addressId", controller.removeAddress);
+// router.post("/account/deletion-request", controller.requestAccountDeletion);
 
 // export default router;

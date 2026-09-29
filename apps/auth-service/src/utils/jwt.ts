@@ -28,6 +28,7 @@ export interface RefreshTokenPayload {
 export const generateAccessToken = (payload: AccessTokenPayload): string => {
   return jwt.sign(payload, ACCESS_SECRET, {
     expiresIn: ACCESS_EXPIRES_IN,
+    algorithm: "HS256",
   } as SignOptions);
 };
 
